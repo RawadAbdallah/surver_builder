@@ -25,6 +25,11 @@ const userSchema = new mongoose.Schema({
         required: [true, "Last name is required."],
         minlength: [2, "Last name must be at least 6 characters."],
     },
+
+    role: {
+        type: Number,
+        default: 1, // User by default (value 1)
+    }
 });
 
 userSchema.pre("save", function (next) {
