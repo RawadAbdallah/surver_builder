@@ -1,5 +1,6 @@
 const express = require("express");
 const { connectToMongoDB } = require("./configs/mongodb.config");
+const { authMiddleware } = require("./middlewares/auth.middleware");
 require("dotenv").config();
 
 const app = express();
@@ -12,7 +13,13 @@ app.get("/", (req, res) => {
 const authRoutes = require('./routes/auth.routes')
 app.use("/auth", authRoutes);
 
-app.listen(8000, () => {
-    console.log("Server listining on PORT: ", 8000);
+const questionsRoutes = require('./routes/questions.routes');
+app.use('/question', authMiddleware, questionsRoutes)
+
+const surveyRoutes = require('./routes/surveys.routes')
+app.use('/survey', authMiddleware, surveyRoutes)
+
+app.listen(process.env.PORT, () => {
+    console.log("Server listining on PORT: ", process.env.PORT);
     connectToMongoDB();
 });

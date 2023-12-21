@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const { mongoose } = require("mongoose");
 const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema({
@@ -28,14 +28,13 @@ const userSchema = new mongoose.Schema({
 
     role: {
         type: Number,
-        default: 1, // User by default (value 1)
+        default: 1, 
     }
 });
 
 userSchema.pre("save", function (next) {
     const validationErrors = this.validateSync();
     if (validationErrors) {
-        // Extract the first validation error message and throw it
         const firstErrorKey = Object.keys(validationErrors.errors)[0];
         const firstErrorMessage =
             validationErrors.errors[firstErrorKey].message;
