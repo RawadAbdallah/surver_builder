@@ -5,15 +5,15 @@ const bcrypt = require("bcrypt");
 const login = async (req, res) => {
     const { email, password } = req.body;
 
-    if(email === undefined){
-        return res.status(401).send({ error: "Please provide an email" });
+    if (email === undefined) {
+        return res.status(401).send({ message: "Please provide an email" });
     }
 
-    if(password === undefined){
-        return res.status(400).send({error: "Please provide a password" })
+    if (password === undefined) {
+        return res.status(400).send({ message: "Please provide a password" });
     }
     const user = await User.findOne({ email });
-    if (!user) res.status(400).send({ message: "Invalid email/password" });
+    if (!user) return res.status(400).send({ message: "Invalid email/password" });
 
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword)
@@ -36,22 +36,21 @@ const login = async (req, res) => {
 };
 
 const register = async (req, res) => {
-    const { email, password, firstname, lastname } = req.body;
-    
-
+    const { email, password, firstName, lastName } = req.body;
+    console.log({email,password,firstName,lastName})
     try {
         const user = new User({
             email,
             password,
-            firstname,
-            lastname,
+            firstName,
+            lastName,
         });
 
         await user.save();
 
-        res.status(200).send({ user });
+        res.status(200).send({ user }); 
     } catch (e) {
-        res.status(500).send({ error: e });
+        res.status(500).send({ error: e.message });
     }
 };
 
